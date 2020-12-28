@@ -1,2 +1,2 @@
 # Genetics
-Genetic algorithms in python
+Particle swarm optimisation and task scheduling optimistation 
