@@ -72,6 +72,10 @@ class Swarm:
         else:
             self.endRange = self.DEFAULT_END_RANGE
         self.particles = []
+        self.generation = 0
+
+        self.holdup = 0
+        self.Rad = []
 
 
     """*
@@ -82,11 +86,10 @@ class Swarm:
 
         self.oldEval = self.bestEval
 
-        generation = 0
-
-        holdup = 0
-        Rad = []
-
+        Rad = self.Rad
+        generation = self.generation
+        holdup = self.holdup
+        
         self.updateRadius(Rad)
         R0 = max(Rad)
         print("MAX radius",R0)
@@ -94,34 +97,33 @@ class Swarm:
         print("alone R", R)
         print("R to R0", R/R0)
 
-        # while(R/R0 > self.STOP_CONDITION):
-        while(generation < 100):
-            generation += 1
-            if self.bestEval == self.oldEval:
-                holdup += 1
-                print(holdup)
-                print(self.bestEval)
-                print(f"Hold up number :  {holdup} at  {self.bestEval}")
 
-            if self.bestEval < self.oldEval:
-                holdup = 0
+        generation += 1
+        if self.bestEval == self.oldEval:
+            holdup += 1
+            print(holdup)
+            print(self.bestEval)
+            print(f"Hold up number :  {holdup} at  {self.bestEval}")
 
-                print(f"Global Best Evaluation (Epoch {generation + 1} :\t + {self.bestEval}")
-                self.oldEval = self.bestEval
-            
+        if self.bestEval < self.oldEval:
+            holdup = 0
 
-            for p in self.particles:
-                p.updatePersonalBest()
-                self.updateGlobalBest(p)
-            
+            print(f"Global Best Evaluation (Epoch {generation + 1} :\t + {self.bestEval}")
+            self.oldEval = self.bestEval
+        
 
-            for p in self.particles:
-                self.updateVelocity(p)
-                p.updatePosition()
-            
+        for p in self.particles:
+            p.updatePersonalBest()
+            self.updateGlobalBest(p)
+        
 
-            self.updateRadius(Rad)
-            R = max(Rad)
+        for p in self.particles:
+            self.updateVelocity(p)
+            p.updatePosition()
+        
+
+        self.updateRadius(Rad)
+        R = max(Rad)
 
 
         
