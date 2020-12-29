@@ -18,11 +18,13 @@ print(df.columns)
 # plt.show()
 
 p = Population(df)
-for i in range(1):
+for i in range(10):
     p.mutate_generation()
     p.next_generation()
     p.repopulate_generation()
+    
+    print("after mutation", p.best.current_time_value)
 # for i in p.best:
 #     print(i.genes.start_time)
 
-print(p.best)
+print("MAX", p.best.current_time_value)

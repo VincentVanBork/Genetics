@@ -40,6 +40,7 @@ class Chromosome():
 
         self.current_time_value:int = self.max_time 
         self.mutated = []
+        
 
     def check_integrity(self, max_num_overlaps):
         """
@@ -79,9 +80,13 @@ class Chromosome():
         """
         calculate how much time tasks take in this chromosome
         """
-
         # for gene in self.genes:
-        starting_gene = min(self.genes, key=lambda x: x.start_time) 
+        starting_gene = min(self.genes, key=lambda x: x.start_time)
+        # print(starting_gene.start_time) 
         finishing_gene = max(self.genes, key=lambda x: x.start_time + x.finish)
-        self.current_time_value:int = finishing_gene.finish - starting_gene.start_time
+        # print(finishing_gene.start_time)
+        self.current_time_value:int = finishing_gene.finish + finishing_gene.start_time - starting_gene.start_time
         return self.current_time_value
+    
+    def copy(self):
+        return self

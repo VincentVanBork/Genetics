@@ -7,7 +7,7 @@ class Population():
     adaptability how much chromosome must be damaged to die (9-49) length of the chromosome
     survivability how many chromosomes are picked from the population as offspring (least 0-Npop) e.g. 5 with lowest time
     """
-    def __init__(self, df, size=100, mutability=5, surivability=0, adaptability=10) -> None:
+    def __init__(self, df, size=1000, mutability=1, surivability=0, adaptability=1) -> None:
         super().__init__()
         self.chromosomes:list[Chromosome] = []
         self.mutability = mutability
@@ -18,23 +18,34 @@ class Population():
         self.fitness:list[int] = []
         self.adaptability = adaptability
         self.size = size 
-        self.best = float('inf')
+        self.best = None
     
     def mutate_generation(self):
         for chromosome in self.chromosomes:
             chromosome.mutate(self.mutability)
 
     def next_generation(self):
-        # assert len(self.chromosomes) >=0
-        # print(self.fitness)
-        # self.fitness = [chromosome.fitness() for chromosome in self.chromosomes]
-        # self.fitness.sort()
-        # print(self.fitness)
-        # self.chromosomes = self.fitness[:self.adaptability]    
-        # self.best = self.chromosomes[0]
+        self.fitness = [chromosome for chromosome in self.chromosomes]
+        for chromosome in self.chromosomes:
+            chromosome.fitness()
+        self.fitness.sort(key=lambda x: x.current_time_value)
+        self.chromosomes = self.fitness[:self.adaptability+1]
+        print("BEST IN CHROME", self.chromosomes[0].current_time_value)
+        #TODO BLAD Z WYBOREM NAJLEPSZEGO
+        if self.best:
+            if self.best.current_time_value > self.chromosomes[0].current_time_value:
+                print("BEST IN POP", self.best.current_time_value)
+                
+                self.best = self.chromosomes[0]
+        else:
+            self.best = self.chromosomes[0]
 
     def repopulate_generation(self):
         while len(self.chromosomes) < self.size:
             for chromosome in self.chromosomes:
-                print("CHROM", chromosome)
-                self.chromosomes.append(chromosome.copy())
+                # print(len(self.chromosomes))
+                # print("CHROM", chromosome)
+                if len(self.chromosomes) < self.size:
+                    self.chromosomes.append(chromosome.copy())
+                else:
+                    break
