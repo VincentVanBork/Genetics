@@ -1,18 +1,28 @@
-from chromosome import create_chromosome
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+from population import Population
 
 df = pd.read_excel("GA_tasks.xlsx", engine="openpyxl")
 df = df.rename(columns={"R":"R.0", "T":"T.0"})
 # print(df.columns)
 # resources = df[df.columns[::2]]
-times = df[df.columns[1::2]].cumsum()
+df[df.columns[1::2]] = df[df.columns[1::2]].cumsum()
 # print(times["T.0"])
 
+print(df.columns)
 # fig,ax = plt.subplots()
 # ax.bar(resources["R.0"],times["T.0"])
 # plt.show()
 
+p = Population(df)
+for i in range(1):
+    p.mutate_generation()
+    p.next_generation()
+    p.repopulate_generation()
+# for i in p.best:
+#     print(i.genes.start_time)
 
-create_chromosome(times)
+print(p.best)
