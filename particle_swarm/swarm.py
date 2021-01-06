@@ -2,7 +2,7 @@ from Particle import Particle
 from Matrix import Matrix
 import numpy as np
 import random
-
+import matplotlib.pyplot as plt
 
 
 class Swarm:
@@ -22,8 +22,8 @@ class Swarm:
 
     beginRange:float 
     endRange:float
-    DEFAULT_BEGIN_RANGE = -4.5
-    DEFAULT_END_RANGE = 4.5
+    DEFAULT_BEGIN_RANGE = -1.5
+    DEFAULT_END_RANGE = 1.5
 
 
     """*
@@ -96,37 +96,49 @@ class Swarm:
         R = max(Rad)
         print("alone R", R)
         print("R to R0", R/R0)
+        plt.ion()
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        while(R/R0 > self.STOP_CONDITION):
+            if (R/R0 > 10000):
+                break
+            print("R to R0", R/R0)
+            generation += 1
+            if self.bestEval == self.oldEval:
+                holdup += 1
+                print(holdup)
+                print(self.bestEval)
+                print(f"Hold up number :  {holdup} at  {self.bestEval} with x,y {self.bestPosition.x},{self.bestPosition.y}")
 
+            if self.bestEval < self.oldEval:
+                holdup = 0
 
-        generation += 1
-        if self.bestEval == self.oldEval:
-            holdup += 1
-            print(holdup)
-            print(self.bestEval)
-            print(f"Hold up number :  {holdup} at  {self.bestEval}")
+                print(f"Global Best Evaluation (Epoch {generation + 1} :\t + {self.bestEval}")
+                self.oldEval = self.bestEval
+            
 
-        if self.bestEval < self.oldEval:
-            holdup = 0
+            for p in self.particles:
+                p.updatePersonalBest()
+                self.updateGlobalBest(p)
+            
 
-            print(f"Global Best Evaluation (Epoch {generation + 1} :\t + {self.bestEval}")
-            self.oldEval = self.bestEval
-        
+            for p in self.particles:
+                self.updateVelocity(p)
+                p.updatePosition()
+            
 
-        for p in self.particles:
-            p.updatePersonalBest()
-            self.updateGlobalBest(p)
-        
+            self.updateRadius(Rad)
+            R = max(Rad)
+            
+            # for k in range(150):
 
-        for p in self.particles:
-            self.updateVelocity(p)
-            p.updatePosition()
-        
-
-        self.updateRadius(Rad)
-        R = max(Rad)
-
-
-        
+            x = [particle.position.x for particle in self.particles]
+            y = [particle.position.y for particle in self.particles]
+            z = [particle.position.z for particle in self.particles]
+            ax.scatter3D(x, y, z, c=z, cmap='viridis')
+            plt.draw()
+            plt.pause(0.5)
+            ax.cla()
 
         print("RESULT")
         print(f"x =  {self.bestPosition.x}")
