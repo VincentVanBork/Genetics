@@ -5,7 +5,7 @@ import seaborn as sns
 
 from population import Population
 
-df = pd.read_excel("GA_tasks.xlsx", engine="openpyxl")
+df = pd.read_excel("GA_task.xlsx", engine="openpyxl")
 df = df.rename(columns={"R":"R.0", "T":"T.0"})
 # print(df.columns)
 # resources = df[df.columns[::2]]

@@ -10,8 +10,11 @@ x_min = -4.5
 y_max = 4.5
 y_min = -4.5
 
-def f(x:float,y:float)->...:
-    return (1.5 - x -x*y)**2 + (2.25 - x + x*y**2)**2 + (2.625 - x + x*y**3)**2
+# def f(x:float,y:float)->...:
+#     return (1.5 - x -x*y)**2 + (2.25 - x + x*y**2)**2 + (2.625 - x + x*y**3)**2
+
+def f(x:float, y:float)->...:
+    return (1-x)**2 + 100*(y-x**2)**2
 
 if __name__ == "__main__":
     s = Swarm(f, 1000, inertia= random.random(),cognitive=1, social=1,  stop=0.01)
